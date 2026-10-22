@@ -1,0 +1,39 @@
+version: 2.1
+
+executors:
+  node-executor:
+    docker:
+      - image: cimg/node:18.16.0
+
+jobs:
+  test:
+    executor: node-executor
+    steps:
+      - checkout
+      - run:
+          name: Run Unit Tests
+          command: npm test
+
+  build-and-push-docker:
+    executor: node-executor
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: default
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -t $DOCKERHUB_USERNAME/circleci-devops-demo:latest .
+      - run:
+          name: Authenticate and Push to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push $DOCKERHUB_USERNAME/circleci-devops-demo:latest
+
+workflows:
+  cicd_pipeline:
+    jobs:
+      - test
+      - build-and-push-docker:
+          requires:
+            - test

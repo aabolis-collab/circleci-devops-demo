@@ -1,0 +1,13 @@
+
+{
+  "name": "circleci-docker-demo",
+  "version": "1.0.0",
+  "description": "DevOps Node.js CircleCI to Docker Pipeline",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node test.js"
+  },
+  "author": "Student",
+  "license": "ISC"
+}
